@@ -1,1 +1,3 @@
-gcc -Wall -o server server.c -pthread
+gcc -Wall -o server server.c -pthread && ./server
+
+javac ChessClient.java && java ChessClient
