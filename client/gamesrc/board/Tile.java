@@ -1,10 +1,30 @@
-package gamesrc;
-
-
+package gamesrc.board;
+import com.google.common.collect.ImmutableMap;
+import gamesrc.pieces.Piece;
+import java.util.HashMap;
+import java.util.Map;
 public abstract class Tile {
-    int tileCoord;
+    private final int tileCoord;
 
-    Tile(int tileCoord){
+    private static final Map<Integer, EmptyTile> EMPTY_TILE_MAP = createAllPossibleEmptyTiles();
+
+    private static Map<Integer,EmptyTile> createAllPossibleEmptyTiles() {
+
+        final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
+
+        for(int i=0; i<BoardUtils.NUM_TILES; i++){
+            emptyTileMap.put(i, new EmptyTile(i));
+        }
+
+
+        return ImmutableMap.copyOf(emptyTileMap);
+    }
+
+    public static Tile createTile(final int tileCoord, final Piece piece){
+        return piece != null ? new OccupiedTile(tileCoord, piece) : EMPTY_TILE_MAP.get(tileCoord);
+    }
+
+    private Tile(final int tileCoord){
         this.tileCoord = tileCoord;
     }
 
@@ -29,7 +49,7 @@ public abstract class Tile {
     }
 
     public static final class OccupiedTile extends Tile{
-        Piece pieceOnTile;
+        private final Piece pieceOnTile;
 
         OccupiedTile(int tileCoord, Piece pieceOnTile){
             super(tileCoord);
