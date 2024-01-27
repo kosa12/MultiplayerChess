@@ -75,7 +75,7 @@ public class Knight extends Piece {
         return BoardUtils.EIGHTH_COLUMN[currentPos] && ((candidateOffset == -15) ||
                                                         (candidateOffset == -6)) ||
                                                         ((candidateOffset == 17) ||
-                                                            (candidateOffset == -10));
+                                                        (candidateOffset == -10));
     }
 
 }
