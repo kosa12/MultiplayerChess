@@ -1,6 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "client/lib/guava-33.0.0-jre.jar"
-    ]
-}
