@@ -14,7 +14,6 @@ public abstract class Move {
     }
 
     public static final class MajorMov extends Move{
-
         public MajorMov(Board board, Piece movedPiece, int destCoord) {
             super(board, movedPiece, destCoord);
         }

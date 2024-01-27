@@ -1,22 +1,22 @@
 package gamesrc.pieces;
 
-import com.google.common.collect.ImmutableList;
-import gamesrc.board.Board;
-import gamesrc.board.BoardUtils;
-import gamesrc.board.Move;
-import gamesrc.board.Tile;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static gamesrc.board.Move.*;
+import com.google.common.collect.ImmutableList;
 
-public class Bishop extends Piece {
+import gamesrc.board.Board;
+import gamesrc.board.BoardUtils;
+import gamesrc.board.Move;
+import gamesrc.board.Tile;
+import gamesrc.board.Move.AttackMov;
+import gamesrc.board.Move.MajorMov;
 
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORD = {-9, -7, 7, 9};
+public class Queen extends Piece {
+    private final static int[] CANDIDATE_MOVE_VECTOR_COORD = {-9,-8, -7,-1, 1, 7, 8, 9};
 
-    Bishop(int piecePosition, Alliance pieceAlliance) {
+    Queen(int piecePosition, Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -58,10 +58,11 @@ public class Bishop extends Piece {
     }
 
     private static boolean isFirstColumnExl(final int currentPos, final int candOffset) {
-        return BoardUtils.FIRST_COLUMN[currentPos] && (candOffset == -9 || candOffset == 7);
+        return BoardUtils.FIRST_COLUMN[currentPos] && (candOffset == -1 || candOffset == -9 || candOffset == 7);
     }
 
     private static boolean isEighthColumnExl(final int currentPos, final int candOffset) {
-        return BoardUtils.EIGHTH_COLUMN[currentPos] && (candOffset == 9 || candOffset == -7);
+        return BoardUtils.EIGHTH_COLUMN[currentPos] && (candOffset == -7 || candOffset == 9 || candOffset == 1);
     }
+
 }
