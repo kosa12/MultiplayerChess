@@ -1,4 +1,4 @@
-package gamesrc.pieces;
+package gamesrc;
 
 public enum Alliance {
     WHITE{

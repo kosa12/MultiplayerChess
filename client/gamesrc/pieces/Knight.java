@@ -1,6 +1,8 @@
 package gamesrc.pieces;
 
 import com.google.common.collect.ImmutableList;
+
+import gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
@@ -15,7 +17,7 @@ public class Knight extends Piece {
 
     private final static int[] CANDIDATE_MOVE_COORD = {-17, -15, 10, -6, 6, 10, 15, 17};
 
-    Knight(final int piecePosition, final Alliance pieceAlliance) {
+    public Knight(final Alliance pieceAlliance, final int piecePosition) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -52,6 +54,11 @@ public class Knight extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString(){
+        return PieceType.KNIGHT.toString();
     }
 
     private static boolean isFirstColumnExcl(final int currentPos, final int candidateOffset) {

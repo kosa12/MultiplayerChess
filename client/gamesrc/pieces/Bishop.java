@@ -1,6 +1,8 @@
 package gamesrc.pieces;
 
 import com.google.common.collect.ImmutableList;
+
+import gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
@@ -16,7 +18,7 @@ public class Bishop extends Piece {
 
     private final static int[] CANDIDATE_MOVE_VECTOR_COORD = {-9, -7, 7, 9};
 
-    Bishop(int piecePosition, Alliance pieceAlliance) {
+    public Bishop(Alliance pieceAlliance, int piecePosition) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -55,6 +57,11 @@ public class Bishop extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString(){
+        return PieceType.BISHOP.toString();
     }
 
     private static boolean isFirstColumnExl(final int currentPos, final int candOffset) {

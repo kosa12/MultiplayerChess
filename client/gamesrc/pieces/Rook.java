@@ -1,5 +1,6 @@
 package gamesrc.pieces;
 
+import gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
@@ -16,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 public class Rook extends Piece{
     private final static int[] CANDIDATE_MOVE_VECTOR_COORD = {-8, -1, 1, 8};
 
-    Rook(int piecePosition, Alliance pieceAlliance) {
+    public Rook(Alliance pieceAlliance, int piecePosition) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -55,6 +56,11 @@ public class Rook extends Piece{
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString(){
+        return PieceType.ROOK.toString();
     }
 
     private static boolean isFirstColumnExl(final int currentPos, final int candOffset) {

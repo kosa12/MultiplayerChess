@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
@@ -14,7 +15,7 @@ public class Pawn extends Piece {
 
     private final static int[] CANDIDATE_MOVE_VECTOR_COORD = { 8, 16, 7, 9 };
 
-    Pawn(int piecePosition, Alliance pAlliance) {
+    public Pawn(Alliance pAlliance, int piecePosition) {
         super(piecePosition, pAlliance);
     }
 
@@ -67,5 +68,10 @@ public class Pawn extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString(){
+        return PieceType.PAWN.toString();
     }
 }
