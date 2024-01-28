@@ -13,6 +13,10 @@ public abstract class Move {
         this.destCoord = destCoord;
     }
 
+    public int getDestCoord() {
+        return this.destCoord;
+    }
+
     public static final class MajorMov extends Move{
         public MajorMov(Board board, Piece movedPiece, int destCoord) {
             super(board, movedPiece, destCoord);
