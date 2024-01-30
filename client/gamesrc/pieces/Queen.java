@@ -1,4 +1,4 @@
-package gamesrc.pieces;
+package gui.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,8 +11,6 @@ import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
 import gamesrc.board.Tile;
-import gamesrc.board.Move.AttackMov;
-import gamesrc.board.Move.MajorMov;
 
 public class Queen extends Piece {
     private final static int[] CANDIDATE_MOVE_VECTOR_COORD = {-9,-8, -7,-1, 1, 7, 8, 9};
@@ -41,12 +39,12 @@ public class Queen extends Piece {
                     final Tile candDestTile = board.getTile(candDestCoord);
 
                     if (!candDestTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMov(board, this, candDestCoord));
+                        legalMoves.add(new Move.MajorMove(board, this, candDestCoord));
                     } else {
                         final Piece pieceAtDest = candDestTile.getPiece();
                         final Alliance pieceAlliance = pieceAtDest.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new AttackMov(board, this, candDestCoord, pieceAtDest));
+                            legalMoves.add(new Move.AttackMove(board, this, candDestCoord, pieceAtDest));
                         }
                         break;
                     }
@@ -56,6 +54,11 @@ public class Queen extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public Queen movePiece(Move move) {
+        return new Queen(move.getMovedPiece().getPieceAlliance(), move.getDestCoord());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package gamesrc.pieces;
+package gui.pieces;
 
 import com.google.common.collect.ImmutableList;
 
@@ -42,12 +42,12 @@ public class Bishop extends Piece {
                     final Tile candDestTile = board.getTile(candDestCoord);
 
                     if (!candDestTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMov(board, this, candDestCoord));
+                        legalMoves.add(new MajorMove(board, this, candDestCoord));
                     } else {
                         final Piece pieceAtDest = candDestTile.getPiece();
                         final Alliance pieceAlliance = pieceAtDest.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new AttackMov(board, this, candDestCoord, pieceAtDest));
+                            legalMoves.add(new AttackMove(board, this, candDestCoord, pieceAtDest));
                         }
                         break;
                     }
@@ -57,6 +57,11 @@ public class Bishop extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public Bishop movePiece(Move move) {
+        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestCoord());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package gamesrc.pieces;
+package gui.pieces;
 
 import com.google.common.collect.ImmutableList;
 
@@ -42,18 +42,23 @@ public class Knight extends Piece {
 
                 final Tile candDestTile = board.getTile(candDestCoord);
                 if (!candDestTile.isTileOccupied()) {
-                    legalMoves.add(new MajorMov(board, this, candDestCoord));
+                    legalMoves.add(new MajorMove(board, this, candDestCoord));
                 } else {
                     final Piece pieceAtDest = candDestTile.getPiece();
                     final Alliance pieceAlliance = pieceAtDest.getPieceAlliance();
                     if (this.pieceAlliance != pieceAlliance) {
-                        legalMoves.add(new AttackMov(board, this, candDestCoord, pieceAtDest));
+                        legalMoves.add(new AttackMove(board, this, candDestCoord, pieceAtDest));
                     }
                 }
             }
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public Knight movePiece(Move move) {
+        return new Knight(move.getMovedPiece().getPieceAlliance(), move.getDestCoord());
     }
 
     @Override

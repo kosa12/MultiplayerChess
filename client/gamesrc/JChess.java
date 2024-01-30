@@ -1,13 +1,2 @@
-package gamesrc;
-
-import gamesrc.board.Board;
-
-public class JChess{
-
-    public static void main(String[] args) {
-        Board board = Board.createStandardBoard();
-
-        System.out.println(board);
-    }
-
+package gamesrc;public class JChess {
 }

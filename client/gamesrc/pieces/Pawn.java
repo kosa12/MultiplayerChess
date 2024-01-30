@@ -1,4 +1,4 @@
-package gamesrc.pieces;
+package gui.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class Pawn extends Piece {
 
             if (currentCandOffset == 8 && board.getTile(currentCandOffset).isTileOccupied()) {
                 // todo xD (deal with promotions)
-                legalMoves.add(new Move.MajorMov(board, null, candDestCoord));
+                legalMoves.add(new Move.MajorMove(board, null, candDestCoord));
             } else if (currentCandOffset == 16 && this.isFirstMove() &&
                     (((BoardUtils.SECOND_ROW[this.piecePosition] && this.getPieceAlliance().isBlack())) ||
                             ((BoardUtils.SEVENTH_ROW[this.piecePosition] && this.getPieceAlliance().isWhite())))) {
@@ -40,7 +40,7 @@ public class Pawn extends Piece {
                 final int behindCandCoord = this.piecePosition + (this.pieceAlliance.getDirection() * 8);
                 if (!board.getTile(behindCandCoord).isTileOccupied()
                         && !board.getTile(candDestCoord).isTileOccupied()) {
-                    legalMoves.add(new Move.MajorMov(board, null, candDestCoord));
+                    legalMoves.add(new Move.MajorMove(board, null, candDestCoord));
                 }
 
             } else if (currentCandOffset == 7 &&
@@ -50,7 +50,7 @@ public class Pawn extends Piece {
                     final Piece pieceOnCand = board.getTile(candDestCoord).getPiece();
                     if (this.pieceAlliance != pieceOnCand.getPieceAlliance()) {
                         // TODO move to here
-                        legalMoves.add(new Move.MajorMov(board, null, candDestCoord));
+                        legalMoves.add(new Move.MajorMove(board, null, candDestCoord));
                     }
                 }
 
@@ -61,13 +61,18 @@ public class Pawn extends Piece {
                     final Piece pieceOnCand = board.getTile(candDestCoord).getPiece();
                     if (this.pieceAlliance != pieceOnCand.getPieceAlliance()) {
                         // TODO move to here
-                        legalMoves.add(new Move.MajorMov(board, null, candDestCoord));
+                        legalMoves.add(new Move.MajorMove(board, null, candDestCoord));
                     }
                 }
             }
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public Pawn movePiece(Move move) {
+        return new Pawn(move.getMovedPiece().getPieceAlliance(), move.getDestCoord());
     }
 
     @Override

@@ -1,12 +1,10 @@
-package gamesrc.pieces;
+package gui.pieces;
 
 import gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
 import gamesrc.board.Tile;
-import gamesrc.board.Move.AttackMov;
-import gamesrc.board.Move.MajorMov;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,12 +39,12 @@ public class Rook extends Piece{
                     final Tile candDestTile = board.getTile(candDestCoord);
 
                     if (!candDestTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMov(board, this, candDestCoord));
+                        legalMoves.add(new Move.MajorMove(board, this, candDestCoord));
                     } else {
                         final Piece pieceAtDest = candDestTile.getPiece();
                         final Alliance pieceAlliance = pieceAtDest.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new AttackMov(board, this, candDestCoord, pieceAtDest));
+                            legalMoves.add(new Move.AttackMove(board, this, candDestCoord, pieceAtDest));
                         }
                         break;
                     }
@@ -56,6 +54,11 @@ public class Rook extends Piece{
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public Rook movePiece(Move move) {
+        return new Rook(move.getMovedPiece().getPieceAlliance(), move.getDestCoord());
     }
 
     @Override
