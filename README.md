@@ -16,7 +16,10 @@
 - Graphical representation of a chessboard.
 - Pieces are displayed using PNG images.
 - Users can click on a piece and then click on a destination square to move the piece.
-
+- All chessmoves are implemented and functional (castling, promotion, enPassat etc..)
+- Option to highlight the possible legal moves to the chosen piece.
+- Game history logging in Algebraic notation.
+  
 ## Getting Started
 
 Follow these instructions to get a copy of the project up and running on your local machine.
