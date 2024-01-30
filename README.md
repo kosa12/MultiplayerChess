@@ -38,7 +38,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 3. Compile and run the application.
     ```bash
     javac gui/*.java
-    java gui.ChessMain
+    java src.client.gamesrc.JChess
 
 ## Analytics
 ![GitHub repo size](https://img.shields.io/github/repo-size/kosa12/MultiplayerChess?style=plastic)
