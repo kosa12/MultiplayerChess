@@ -2,7 +2,7 @@ package gamesrc.player;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import gamesrc.Alliance;
+import client.gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.Move;
 import gamesrc.pieces.King;

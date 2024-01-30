@@ -5,7 +5,7 @@ import java.util.*;
 import com.google.common.collect.ImmutableList;
 
 import com.google.common.collect.Iterables;
-import gamesrc.Alliance;
+import client.gamesrc.Alliance;
 import gamesrc.pieces.Bishop;
 import gamesrc.pieces.King;
 import gamesrc.pieces.Knight;

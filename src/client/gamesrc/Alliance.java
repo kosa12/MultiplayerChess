@@ -1,4 +1,4 @@
-package gamesrc;
+package client.gamesrc;
 
 import gamesrc.player.BlackPlayer;
 import gamesrc.player.Player;

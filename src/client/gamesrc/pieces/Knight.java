@@ -2,7 +2,7 @@ package gamesrc.pieces;
 
 import com.google.common.collect.ImmutableList;
 
-import gamesrc.Alliance;
+import client.gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;

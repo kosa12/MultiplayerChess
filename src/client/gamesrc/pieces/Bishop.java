@@ -1,6 +1,8 @@
 package gamesrc.pieces;
 
-import gamesrc.Alliance;
+import com.google.common.collect.ImmutableList;
+
+import client.gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
@@ -10,35 +12,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
+import static gamesrc.board.Move.*;
 
-public class Rook extends Piece {
+public class Bishop extends Piece {
 
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-8, -1, 1, 8};
+    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-9, -7, 7, 9};
 
-    /**
-     * A piece constructor, creates a piece belonging
-     * to a certain alliance from parameters.
-     *
-     * @param piecePosition coordinate at which it shall be put.
-     * @param pieceAlliance an alliance to which the piece will belong - black or white.
-     */
-    public Rook(Alliance pieceAlliance, int piecePosition) {
-        super(PieceType.ROOK, piecePosition, pieceAlliance, true);
+    public Bishop(final Alliance pieceAlliance, int piecePosition) {
+        super(Piece.PieceType.BISHOP, piecePosition, pieceAlliance, true);
     }
 
-    public Rook(Alliance pieceAlliance, int piecePosition, boolean isFirstMove){
-        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
+    public Bishop(final Alliance pieceAlliance, int piecePosition, boolean isFirstMove) {
+        super(Piece.PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
     }
 
     @Override
     public String toString() {
-        return PieceType.ROOK.toString();
+        return Piece.PieceType.BISHOP.toString();
     }
 
     @Override
-    public Rook movePiece(Move move) {
-        return new Rook(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+    public Bishop movePiece(Move move) {
+        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
     }
 
     /**
@@ -69,12 +64,12 @@ public class Rook extends Piece {
 
                     final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
                     if (!candidateDestinationTile.isTileOccupied()) {
-                        legalMoves.add(new Move.PawnMove(board, this, candidateDestinationCoordinate));
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
                         final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                         final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
                         // if it's occupied, no need to continue validating, break
                         break;
@@ -89,27 +84,13 @@ public class Rook extends Piece {
 
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {
-        return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -1);
+        return (BoardUtils.FIRST_COLUMN[currentPosition] &&
+                ((candidateOffset == -9) || (candidateOffset == 7)));
     }
 
     private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset) {
-        return BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == 1);
+        return BoardUtils.EIGHTH_COLUMN[currentPosition] &&
+                ((candidateOffset == -7) || (candidateOffset == 9));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

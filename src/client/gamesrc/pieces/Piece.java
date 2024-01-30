@@ -1,6 +1,6 @@
 package gamesrc.pieces;
 
-import gamesrc.Alliance;
+import client.gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.Move;
 

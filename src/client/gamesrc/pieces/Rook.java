@@ -1,20 +1,20 @@
 package gamesrc.pieces;
 
+import client.gamesrc.Alliance;
+import gamesrc.board.Board;
+import gamesrc.board.BoardUtils;
+import gamesrc.board.Move;
+import gamesrc.board.Tile;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import gamesrc.Alliance;
-import gamesrc.board.Board;
-import gamesrc.board.BoardUtils;
-import gamesrc.board.Move;
-import gamesrc.board.Tile;
+public class Rook extends Piece {
 
-public class Queen extends Piece {
-
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-9, -8, -7, -1, 1, 7, 8, 9};
+    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-8, -1, 1, 8};
 
     /**
      * A piece constructor, creates a piece belonging
@@ -23,24 +23,32 @@ public class Queen extends Piece {
      * @param piecePosition coordinate at which it shall be put.
      * @param pieceAlliance an alliance to which the piece will belong - black or white.
      */
-    public Queen(Alliance pieceAlliance, int piecePosition) {
-        super(PieceType.QUEEN, piecePosition,pieceAlliance, true);
+    public Rook(Alliance pieceAlliance, int piecePosition) {
+        super(PieceType.ROOK, piecePosition, pieceAlliance, true);
     }
 
-    public Queen(Alliance pieceAlliance, int piecePosition, boolean isFirstMove) {
-        super(PieceType.QUEEN, piecePosition,pieceAlliance, isFirstMove);
+    public Rook(Alliance pieceAlliance, int piecePosition, boolean isFirstMove){
+        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
     }
 
     @Override
     public String toString() {
-        return PieceType.QUEEN.toString();
+        return PieceType.ROOK.toString();
     }
 
     @Override
-    public Queen movePiece(Move move) {
-        return new Queen(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+    public Rook movePiece(Move move) {
+        return new Rook(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
     }
 
+    /**
+     * Returns a list of legal moves which can be used
+     * to determine which way can a piece move.
+     * Overriden method from super class Piece.
+     *
+     * @param board a board at which the moves should be calculated
+     * @return list of Move class objects
+     */
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
 
@@ -73,27 +81,35 @@ public class Queen extends Piece {
                     }
                 }
             }
+
         }
 
         return ImmutableList.copyOf(legalMoves);
     }
 
 
-    private static boolean isFirstColumnExclusion(final int currentPosition,
-                                                  final int candidateOffset) {
-        return (BoardUtils.FIRST_COLUMN[currentPosition] &&
-                ((candidateOffset == -9) || (candidateOffset == 7) || (candidateOffset == -1)));
+    private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {
+        return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -1);
     }
 
-    private static boolean isEighthColumnExclusion(final int currentPosition,
-                                                   final int candidateOffset) {
-        return BoardUtils.EIGHTH_COLUMN[currentPosition] &&
-                ((candidateOffset == -7) || (candidateOffset == 9) || (candidateOffset == 1));
+    private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset) {
+        return BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == 1);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 }
-

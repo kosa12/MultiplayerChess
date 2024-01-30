@@ -1,10 +1,9 @@
 package gamesrc.player;
 
 import com.google.common.collect.ImmutableList;
-import gamesrc.Alliance;
+import client.gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.Move;
-import gamesrc.board.Move.KingSideCastleMove;
 import gamesrc.board.Tile;
 import gamesrc.pieces.Piece;
 import gamesrc.pieces.Rook;

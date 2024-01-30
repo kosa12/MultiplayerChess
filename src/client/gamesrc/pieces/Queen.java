@@ -1,49 +1,46 @@
 package gamesrc.pieces;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 
-import gamesrc.Alliance;
+import client.gamesrc.Alliance;
 import gamesrc.board.Board;
 import gamesrc.board.BoardUtils;
 import gamesrc.board.Move;
 import gamesrc.board.Tile;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+public class Queen extends Piece {
 
-import static gamesrc.board.Move.*;
+    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-9, -8, -7, -1, 1, 7, 8, 9};
 
-public class Bishop extends Piece {
-
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-9, -7, 7, 9};
-
-    public Bishop(final Alliance pieceAlliance, int piecePosition) {
-        super(Piece.PieceType.BISHOP, piecePosition, pieceAlliance, true);
+    /**
+     * A piece constructor, creates a piece belonging
+     * to a certain alliance from parameters.
+     *
+     * @param piecePosition coordinate at which it shall be put.
+     * @param pieceAlliance an alliance to which the piece will belong - black or white.
+     */
+    public Queen(Alliance pieceAlliance, int piecePosition) {
+        super(PieceType.QUEEN, piecePosition,pieceAlliance, true);
     }
 
-    public Bishop(final Alliance pieceAlliance, int piecePosition, boolean isFirstMove) {
-        super(Piece.PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
+    public Queen(Alliance pieceAlliance, int piecePosition, boolean isFirstMove) {
+        super(PieceType.QUEEN, piecePosition,pieceAlliance, isFirstMove);
     }
 
     @Override
     public String toString() {
-        return Piece.PieceType.BISHOP.toString();
+        return PieceType.QUEEN.toString();
     }
 
     @Override
-    public Bishop movePiece(Move move) {
-        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+    public Queen movePiece(Move move) {
+        return new Queen(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
     }
 
-    /**
-     * Returns a list of legal moves which can be used
-     * to determine which way can a piece move.
-     * Overriden method from super class Piece.
-     *
-     * @param board a board at which the moves should be calculated
-     * @return list of Move class objects
-     */
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
 
@@ -64,33 +61,39 @@ public class Bishop extends Piece {
 
                     final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
                     if (!candidateDestinationTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                        legalMoves.add(new Move.PawnMove(board, this, candidateDestinationCoordinate));
                     } else {
                         final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                         final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                            legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
                         // if it's occupied, no need to continue validating, break
                         break;
                     }
                 }
             }
-
         }
 
         return ImmutableList.copyOf(legalMoves);
     }
 
 
-    private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {
+    private static boolean isFirstColumnExclusion(final int currentPosition,
+                                                  final int candidateOffset) {
         return (BoardUtils.FIRST_COLUMN[currentPosition] &&
-                ((candidateOffset == -9) || (candidateOffset == 7)));
+                ((candidateOffset == -9) || (candidateOffset == 7) || (candidateOffset == -1)));
     }
 
-    private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset) {
+    private static boolean isEighthColumnExclusion(final int currentPosition,
+                                                   final int candidateOffset) {
         return BoardUtils.EIGHTH_COLUMN[currentPosition] &&
-                ((candidateOffset == -7) || (candidateOffset == 9));
+                ((candidateOffset == -7) || (candidateOffset == 9) || (candidateOffset == 1));
     }
+
+
+
+
 
 }
+
