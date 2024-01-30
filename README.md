@@ -41,7 +41,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ## Analytics
 ![GitHub repo size](https://img.shields.io/github/repo-size/kosa12/MultiplayerChess?style=plastic)
-![GitHub last commit](https://img.shields.io/github/last-commit/kosa12/MultiplayerChess=red&style=plastic)
+![GitHub last commit](https://img.shields.io/github/last-commit/kosa12/MultiplayerChess?=red&style=plastic)
 
 ## Donate
 
