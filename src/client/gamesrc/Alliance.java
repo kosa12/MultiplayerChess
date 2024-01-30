@@ -1,5 +1,6 @@
 package client.gamesrc;
 
+import client.gamesrc.board.BoardUtils;
 import client.gamesrc.player.BlackPlayer;
 import client.gamesrc.player.Player;
 import client.gamesrc.player.WhitePlayer;
@@ -25,6 +26,16 @@ public enum Alliance {
         public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return whitePlayer;
         }
+
+        @Override
+        public int getOppositeDirection() {
+            return 1;
+        }
+
+        @Override
+        public boolean isPawnPromotionSquare(int position) {
+            return BoardUtils.EIGHTH_RANK[position];
+        }
     },
     BLACK {
         @Override
@@ -46,6 +57,16 @@ public enum Alliance {
         public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return blackPlayer;
         }
+
+        @Override
+        public int getOppositeDirection() {
+            return -1;
+        }
+
+        @Override
+        public boolean isPawnPromotionSquare(int position) {
+            return BoardUtils.FIRST_RANK[position];
+        }
     };
 
     public abstract int getDirection();
@@ -55,5 +76,9 @@ public enum Alliance {
     public abstract boolean isWhite();
 
     public abstract Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer);
+
+    public abstract int getOppositeDirection();
+
+    public abstract boolean isPawnPromotionSquare(int position);
 }
 

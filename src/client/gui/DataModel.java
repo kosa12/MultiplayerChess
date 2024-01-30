@@ -1,2 +1,4 @@
-package client.gui;public interface DataModel {
+package client.gui;
+
+public interface DataModel {
 }

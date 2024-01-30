@@ -24,16 +24,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static javax.swing.SwingUtilities.isLeftMouseButton;
-import static javax.swing.SwingUtilities.isRightMouseButton;
+import static javax.swing.SwingUtilities.*;
 
 public class Table {
 
-    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
+    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(1000, 800);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static final String defaultPieceImagesPath = "src/client/gui/chessPiece/";
     private static Board chessBoard;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private static BoardDirection boardDirection;
     private boolean highlightLegalMoves;
     private Tile sourceTile;
@@ -44,6 +45,7 @@ public class Table {
 
     private final JFrame gameFrame;
     private static BoardPanel boardPanel;
+    private final MoveLog moveLog;
 
     public Table() {
         this.gameFrame = new JFrame("chessGame");
@@ -54,7 +56,12 @@ public class Table {
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         chessBoard = Board.createStandardBoard();
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
+        this.moveLog = new MoveLog();
         boardPanel = new BoardPanel();
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
+        this.gameFrame.add(gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
     }
@@ -123,6 +130,37 @@ public class Table {
 
     }
 
+    public static class MoveLog{
+        private final List<Move> moves;
+        MoveLog(){
+            this.moves = new ArrayList<>();
+        }
+
+        public List<Move> getMoves(){
+            return this.moves;
+        }
+
+        public void addMoves(final Move move){
+            this.moves.add(move);
+        }
+
+        public int size(){
+            return this.moves.size();
+        }
+
+        public void clear(){
+            this.moves.clear();
+        }
+
+        public Move removeMove(int index){
+            return this.moves.remove(index);
+        }
+
+        public boolean removeMove(final Move move){
+            return this.moves.remove(move);
+        }
+    }
+
     private class TilePanel extends JPanel {
 
         private final int tileId;
@@ -156,7 +194,7 @@ public class Table {
                             final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                             if (transition.getMoveStatus().isDone()) {
                                 chessBoard = transition.getTransitionBoard();
-                                //todo add the move that was made to move log
+                                moveLog.addMoves(move);
                             }
                             sourceTile = null;
                             destinationTile = null;
@@ -165,6 +203,8 @@ public class Table {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(chessBoard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                                 boardPanel.drawBoard(chessBoard);
                             }
                         });

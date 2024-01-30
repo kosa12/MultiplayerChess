@@ -47,48 +47,30 @@ public abstract class Piece {
     public int hashCode() {
         return this.cachedHashCode;
     }
-
-    /**
-     * Returns position of a piece.
-     *
-     * @return A piece coordinate.
-     */
     public int getPiecePosition() {
         return this.piecePosition;
     }
-
-    /**
-     * Returns an alliance of a piece.
-     *
-     * @return An alliance, black or white.
-     */
     public Alliance getPieceAlliance() {
         return this.pieceAlliance;
     }
-
-    /**
-     * Returns true if a piece hasn't moved yet,
-     * otherwise returns false
-     */
     public boolean isFirstMove() {
         return this.isFirstMove;
     }
-
-
-    /**
-     * Returns a piece type of called object
-     */
     public PieceType getPieceType() {
         return this.pieceType;
+    }
+    public int getPieceValue(){
+        return this.pieceType.getPieceValue();
     }
 
     public abstract Piece movePiece(Move move);
 
     public abstract Collection<Move> calculateLegalMoves(final Board board);
 
+
     public enum PieceType {
 
-        PAWN("P") {
+        PAWN( "P", 100) {
             @Override
             public boolean isKing() {
                 return false;
@@ -99,7 +81,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        KNIGHT("N") {
+        KNIGHT("N", 300) {
             @Override
             public boolean isKing() {
                 return false;
@@ -110,7 +92,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        BISHOP("B") {
+        BISHOP("B", 300) {
             @Override
             public boolean isKing() {
                 return false;
@@ -121,7 +103,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        ROOK("R") {
+        ROOK("R", 500) {
             @Override
             public boolean isKing() {
                 return false;
@@ -132,7 +114,7 @@ public abstract class Piece {
                 return true;
             }
         },
-        QUEEN("Q") {
+        QUEEN("Q",900) {
             @Override
             public boolean isKing() {
                 return false;
@@ -143,7 +125,7 @@ public abstract class Piece {
                 return false;
             }
         },
-        KING("K") {
+        KING("K", 1000) {
             @Override
             public boolean isKing() {
                 return true;
@@ -156,14 +138,20 @@ public abstract class Piece {
         };
 
         private String pieceName;
+        private int pieceValue;
 
-        PieceType(final String pieceName) {
+        PieceType(final String pieceName, final int pieceValue) {
             this.pieceName = pieceName;
+            this.pieceValue = pieceValue;
         }
 
         public abstract boolean isKing();
 
         public abstract boolean isRook();
+
+        public int getPieceValue(){
+            return this.pieceValue;
+        }
 
         @Override
         public String toString() {

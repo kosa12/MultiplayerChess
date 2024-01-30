@@ -18,10 +18,13 @@ public class Board {
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
 
+    private final Pawn enPassantPawn;
+
     public Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
+        this.enPassantPawn = builder.enPassantPawn;
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
@@ -47,6 +50,10 @@ public class Board {
 
     public Collection<Piece> getWhitePieces() {
         return this.whitePieces;
+    }
+
+    public Pawn getEnPassantPawn(){
+        return this.enPassantPawn;
     }
 
     @Override
@@ -167,23 +174,11 @@ public class Board {
             this.boardConfig = new HashMap<>();
         }
 
-        /**
-         * Sets a piece to a certain spot in a builder map.
-         *
-         * @param piece a piece we want to set.
-         * @return the builder instance.
-         */
         public Builder setPiece(final Piece piece) {
             this.boardConfig.put(piece.getPiecePosition(), piece);
             return this;
         }
 
-        /**
-         * Sets which player's round it is.
-         *
-         * @param alliance An alliance which we want to have a turn.
-         * @return the builder instance.
-         */
         public Builder setMoveMaker(final Alliance alliance) {
             this.nextMoveMaker = alliance;
             return this;

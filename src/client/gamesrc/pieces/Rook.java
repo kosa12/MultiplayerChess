@@ -40,14 +40,6 @@ public class Rook extends Piece {
         return new Rook(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
     }
 
-    /**
-     * Returns a list of legal moves which can be used
-     * to determine which way can a piece move.
-     * Overriden method from super class Piece.
-     *
-     * @param board a board at which the moves should be calculated
-     * @return list of Move class objects
-     */
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
 
@@ -73,9 +65,8 @@ public class Rook extends Piece {
                         final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                         final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                            legalMoves.add(new Move.MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
-                        // if it's occupied, no need to continue validating, break
                         break;
                     }
                 }
