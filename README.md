@@ -24,6 +24,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 ### Prerequisites
 
 - Java Development Kit (JDK) installed on your machine.
+- Guava external library : https://github.com/google/guava.git
 
 ## Run Locally 🥁
 1. Clone the repository to your local machine.
