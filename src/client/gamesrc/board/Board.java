@@ -1,21 +1,14 @@
-package gamesrc.board;
+package client.gamesrc.board;
+
+import client.gamesrc.Alliance;
+import client.gamesrc.pieces.*;
+import client.gamesrc.player.BlackPlayer;
+import client.gamesrc.player.Player;
+import client.gamesrc.player.WhitePlayer;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 import java.util.*;
-
-import com.google.common.collect.ImmutableList;
-
-import com.google.common.collect.Iterables;
-import client.gamesrc.Alliance;
-import gamesrc.pieces.Bishop;
-import gamesrc.pieces.King;
-import gamesrc.pieces.Knight;
-import gamesrc.pieces.Pawn;
-import gamesrc.pieces.Piece;
-import gamesrc.pieces.Queen;
-import gamesrc.pieces.Rook;
-import gamesrc.player.BlackPlayer;
-import gamesrc.player.Player;
-import gamesrc.player.WhitePlayer;
 
 public class Board {
     private final List<Tile> gameBoard;
@@ -25,14 +18,6 @@ public class Board {
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
 
-
-    /**
-     * Constructor for a Board class,
-     * creates a game board from a builder
-     *
-     * @param builder a builder we want to build from.
-     * @return Builder which we want to use to create a board.
-     */
     public Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
@@ -44,20 +29,10 @@ public class Board {
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
 
-    /**
-     * Returns a white player object.
-     *
-     * @return white player.
-     */
     public Player whitePlayer() {
         return this.whitePlayer;
     }
 
-    /**
-     * Returns a black player object.
-     *
-     * @return black player.
-     */
     public Player blackPlayer() {
         return this.blackPlayer;
     }
@@ -66,20 +41,10 @@ public class Board {
         return currentPlayer;
     }
 
-    /**
-     * Returns a collection of all black pieces.
-     *
-     * @return collection of all black pieces.
-     */
     public Collection<Piece> getBlackPieces() {
         return this.blackPieces;
     }
 
-    /**
-     * Returns a collection of all white pieces.
-     *
-     * @return collection of all white pieces.
-     */
     public Collection<Piece> getWhitePieces() {
         return this.whitePieces;
     }

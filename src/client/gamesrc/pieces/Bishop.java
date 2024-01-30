@@ -1,18 +1,18 @@
-package gamesrc.pieces;
-
-import com.google.common.collect.ImmutableList;
+package client.gamesrc.pieces;
 
 import client.gamesrc.Alliance;
-import gamesrc.board.Board;
-import gamesrc.board.BoardUtils;
-import gamesrc.board.Move;
-import gamesrc.board.Tile;
+import client.gamesrc.board.Board;
+import client.gamesrc.board.BoardUtils;
+import client.gamesrc.board.Move;
+import client.gamesrc.board.Tile;
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static gamesrc.board.Move.*;
+import static client.gamesrc.board.Move.AttackMove;
+import static client.gamesrc.board.Move.MajorMove;
 
 public class Bishop extends Piece {
 

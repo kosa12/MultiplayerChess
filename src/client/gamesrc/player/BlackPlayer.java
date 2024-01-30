@@ -1,12 +1,12 @@
-package gamesrc.player;
+package client.gamesrc.player;
 
 import com.google.common.collect.ImmutableList;
 import client.gamesrc.Alliance;
-import gamesrc.board.Board;
-import gamesrc.board.Move;
-import gamesrc.board.Tile;
-import gamesrc.pieces.Piece;
-import gamesrc.pieces.Rook;
+import client.gamesrc.board.Board;
+import client.gamesrc.board.Move;
+import client.gamesrc.board.Tile;
+import client.gamesrc.pieces.Piece;
+import client.gamesrc.pieces.Rook;
 
 import java.util.ArrayList;
 import java.util.Collection;

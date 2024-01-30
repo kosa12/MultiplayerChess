@@ -1,7 +1,7 @@
-package gamesrc;
+package client.gamesrc;
 
-import gamesrc.board.Board;
-import gui.Table;
+import client.gamesrc.board.Board;
+import client.gui.Table;
 
 public class JChess {
 

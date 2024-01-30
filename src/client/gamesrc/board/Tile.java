@@ -1,8 +1,11 @@
-package gamesrc.board;
+package client.gamesrc.board;
 import com.google.common.collect.ImmutableMap;
-import gamesrc.pieces.Piece;
+
+import client.gamesrc.pieces.Piece;
+
 import java.util.HashMap;
 import java.util.Map;
+
 public abstract class Tile {
     protected final int tileCoordinate;
     private static final Map<Integer, EmptyTile> EMPTY_TILES_CACHE = createAllPossibleEmptyTiles();

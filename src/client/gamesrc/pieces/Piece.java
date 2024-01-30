@@ -1,8 +1,8 @@
-package gamesrc.pieces;
+package client.gamesrc.pieces;
 
 import client.gamesrc.Alliance;
-import gamesrc.board.Board;
-import gamesrc.board.Move;
+import client.gamesrc.board.Board;
+import client.gamesrc.board.Move;
 
 import java.util.Collection;
 

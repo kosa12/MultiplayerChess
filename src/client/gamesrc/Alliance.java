@@ -1,8 +1,8 @@
 package client.gamesrc;
 
-import gamesrc.player.BlackPlayer;
-import gamesrc.player.Player;
-import gamesrc.player.WhitePlayer;
+import client.gamesrc.player.BlackPlayer;
+import client.gamesrc.player.Player;
+import client.gamesrc.player.WhitePlayer;
 
 public enum Alliance {
     WHITE {

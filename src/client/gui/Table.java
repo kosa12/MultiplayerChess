@@ -1,13 +1,13 @@
-package gui;
+package client.gui;
 
 
+import client.gamesrc.board.Board;
+import client.gamesrc.board.BoardUtils;
+import client.gamesrc.board.Move;
+import client.gamesrc.board.Tile;
+import client.gamesrc.pieces.Piece;
+import client.gamesrc.player.MoveTransition;
 import com.google.common.collect.Lists;
-import gamesrc.board.Board;
-import gamesrc.board.BoardUtils;
-import gamesrc.board.Move;
-import gamesrc.board.Tile;
-import gamesrc.pieces.Piece;
-import gamesrc.player.MoveTransition;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,7 +32,7 @@ public class Table {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
-    private static final String defaultPieceImagesPath = "gui/chessPiece/";
+    private static final String defaultPieceImagesPath = "src/client/gui/chessPiece/";
     private static Board chessBoard;
     private static BoardDirection boardDirection;
     private boolean highlightLegalMoves;
@@ -240,7 +240,7 @@ public class Table {
                 for (final Move move : pieceLegalMoves(board)) {
                     if (move.getDestinationCoordinate() == this.tileId) {
                         try {
-                            add(new JLabel(new ImageIcon(ImageIO.read(new File("gui/green_dot.png")))));
+                            add(new JLabel(new ImageIcon(ImageIO.read(new File("src/client/gui/green_dot.png")))));
                         }
                         catch (final IOException e) {
                             e.printStackTrace();

@@ -1,18 +1,16 @@
-package gamesrc.pieces;
+package client.gamesrc.pieces;
+
+import client.gamesrc.Alliance;
+import client.gamesrc.board.Board;
+import client.gamesrc.board.BoardUtils;
+import client.gamesrc.board.Move;
+import client.gamesrc.board.Tile;
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
-import client.gamesrc.Alliance;
-import gamesrc.board.Board;
-import gamesrc.board.BoardUtils;
-import gamesrc.board.Move;
-import gamesrc.board.Move.AttackMove;
-import gamesrc.board.Move.MajorMove;
-import gamesrc.board.Tile;
 
 public class King extends Piece {
 
@@ -49,11 +47,11 @@ public class King extends Piece {
                 final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
                 final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                 if (pieceAtDestination == null) {
-                    legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                    legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));
                 } else {
                     final Alliance pieceAtDestinationAllegiance = pieceAtDestination.getPieceAlliance();
                     if (this.pieceAlliance != pieceAtDestinationAllegiance) {
-                        legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate,
+                        legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
                                 pieceAtDestination));
                     }
                 }

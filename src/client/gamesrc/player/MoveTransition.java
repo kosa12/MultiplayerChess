@@ -1,9 +1,7 @@
-package gamesrc.player;
+package client.gamesrc.player;
 
-import gamesrc.board.Board;
-import gamesrc.board.Move;
-
-import java.util.concurrent.Future;
+import client.gamesrc.board.Board;
+import client.gamesrc.board.Move;
 
 public class MoveTransition {
 

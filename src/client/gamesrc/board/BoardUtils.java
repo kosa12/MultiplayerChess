@@ -1,4 +1,4 @@
-package gamesrc.board;
+package client.gamesrc.board;
 
 
 import java.util.*;

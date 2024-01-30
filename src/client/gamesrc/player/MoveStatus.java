@@ -1,4 +1,4 @@
-package gamesrc.player;
+package client.gamesrc.player;
 
 public enum MoveStatus {
     DONE {

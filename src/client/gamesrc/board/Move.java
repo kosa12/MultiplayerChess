@@ -1,8 +1,9 @@
-package gamesrc.board;
+package client.gamesrc.board;
 
-import gamesrc.pieces.Pawn;
-import gamesrc.pieces.Piece;
-import gamesrc.pieces.Rook;
+
+import client.gamesrc.pieces.Piece;
+import client.gamesrc.pieces.Rook;
+import client.gamesrc.pieces.Pawn;
 
 public abstract class Move {
 
