@@ -1,4 +1,4 @@
-package gui.pieces;
+package gamesrc.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,65 +13,87 @@ import gamesrc.board.Move;
 import gamesrc.board.Tile;
 
 public class Queen extends Piece {
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORD = {-9,-8, -7,-1, 1, 7, 8, 9};
 
+    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-9, -8, -7, -1, 1, 7, 8, 9};
+
+    /**
+     * A piece constructor, creates a piece belonging
+     * to a certain alliance from parameters.
+     *
+     * @param piecePosition coordinate at which it shall be put.
+     * @param pieceAlliance an alliance to which the piece will belong - black or white.
+     */
     public Queen(Alliance pieceAlliance, int piecePosition) {
-        super(PieceType.QUEEN,piecePosition, pieceAlliance);
+        super(PieceType.QUEEN, piecePosition,pieceAlliance, true);
+    }
+
+    public Queen(Alliance pieceAlliance, int piecePosition, boolean isFirstMove) {
+        super(PieceType.QUEEN, piecePosition,pieceAlliance, isFirstMove);
     }
 
     @Override
-    public Collection<Move> calculateLegalMoves(Board board) {
+    public String toString() {
+        return PieceType.QUEEN.toString();
+    }
+
+    @Override
+    public Queen movePiece(Move move) {
+        return new Queen(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+    }
+
+    @Override
+    public Collection<Move> calculateLegalMoves(final Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
 
-        for (int candCoordOffset : CANDIDATE_MOVE_VECTOR_COORD) {
-            int candDestCoord = this.piecePosition;
+        for (final int candidateCoordinateOffset : CANDIDATE_MOVE_VECTOR_COORDS) {
 
-            while (BoardUtils.isValidTileCoord(candDestCoord)) {
+            int candidateDestinationCoordinate = this.piecePosition;
 
-                if (isFirstColumnExl(candDestCoord, candCoordOffset) || isEighthColumnExl(candDestCoord, candCoordOffset)) {
+            while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
+
+                if (isFirstColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset) ||
+                        isEighthColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset)) {
                     break;
                 }
+                candidateDestinationCoordinate += candidateCoordinateOffset;
+                if (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
 
-                candDestCoord += candCoordOffset;
-
-                if (BoardUtils.isValidTileCoord(candDestCoord)) {
-                    final Tile candDestTile = board.getTile(candDestCoord);
-
-                    if (!candDestTile.isTileOccupied()) {
-                        legalMoves.add(new Move.MajorMove(board, this, candDestCoord));
+                    final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
+                    if (!candidateDestinationTile.isTileOccupied()) {
+                        legalMoves.add(new Move.PawnMove(board, this, candidateDestinationCoordinate));
                     } else {
-                        final Piece pieceAtDest = candDestTile.getPiece();
-                        final Alliance pieceAlliance = pieceAtDest.getPieceAlliance();
+                        final Piece pieceAtDestination = candidateDestinationTile.getPiece();
+                        final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new Move.AttackMove(board, this, candDestCoord, pieceAtDest));
+                            legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
+                        // if it's occupied, no need to continue validating, break
                         break;
                     }
                 }
             }
-
         }
 
         return ImmutableList.copyOf(legalMoves);
     }
 
-    @Override
-    public Queen movePiece(Move move) {
-        return new Queen(move.getMovedPiece().getPieceAlliance(), move.getDestCoord());
+
+    private static boolean isFirstColumnExclusion(final int currentPosition,
+                                                  final int candidateOffset) {
+        return (BoardUtils.FIRST_COLUMN[currentPosition] &&
+                ((candidateOffset == -9) || (candidateOffset == 7) || (candidateOffset == -1)));
     }
 
-    @Override
-    public String toString(){
-        return PieceType.QUEEN.toString();
+    private static boolean isEighthColumnExclusion(final int currentPosition,
+                                                   final int candidateOffset) {
+        return BoardUtils.EIGHTH_COLUMN[currentPosition] &&
+                ((candidateOffset == -7) || (candidateOffset == 9) || (candidateOffset == 1));
     }
 
-    private static boolean isFirstColumnExl(final int currentPos, final int candOffset) {
-        return BoardUtils.FIRST_COLUMN[currentPos] && (candOffset == -1 || candOffset == -9 || candOffset == 7);
-    }
 
-    private static boolean isEighthColumnExl(final int currentPos, final int candOffset) {
-        return BoardUtils.EIGHTH_COLUMN[currentPos] && (candOffset == -7 || candOffset == 9 || candOffset == 1);
-    }
+
+
 
 }
+

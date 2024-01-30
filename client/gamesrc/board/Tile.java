@@ -4,76 +4,92 @@ import gamesrc.pieces.Piece;
 import java.util.HashMap;
 import java.util.Map;
 public abstract class Tile {
-    private final int tileCoord;
+    protected final int tileCoordinate;
+    private static final Map<Integer, EmptyTile> EMPTY_TILES_CACHE = createAllPossibleEmptyTiles();
 
-    private static final Map<Integer, EmptyTile> EMPTY_TILE_MAP = createAllPossibleEmptyTiles();
 
-    private static Map<Integer,EmptyTile> createAllPossibleEmptyTiles() {
+    /* Creates a map of all possible empty tiles (EMPTY_TILES_CACHE) upfront, so when we need one we don't have to
+    create it again, we'll just take it out of this map.*/
+    private static Map<Integer, EmptyTile> createAllPossibleEmptyTiles() {
 
         final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
-
-        for(int i=0; i<BoardUtils.NUM_TILES; i++){
+        for (int i = 0; i < BoardUtils.NUM_TILES; i++) {
             emptyTileMap.put(i, new EmptyTile(i));
         }
-
-
         return ImmutableMap.copyOf(emptyTileMap);
     }
 
-    public static Tile createTile(final int tileCoord, final Piece piece){
-        return piece != null ? new OccupiedTile(tileCoord, piece) : EMPTY_TILE_MAP.get(tileCoord);
+
+    /**
+     * A constructor, creates a Tile based on input parameters     *
+     *
+     * @param tileCoordinate coordinate at which a tile should be created
+     * @param piece          a piece which should be put on that tile
+     * @return if a piece is not null, calls OccupiedTile constructor, otherwise marks tile as empty
+     */
+    public static Tile createTile(final int tileCoordinate, final Piece piece) {
+        return piece != null ? new OccupiedTile(tileCoordinate, piece) : EMPTY_TILES_CACHE.get(tileCoordinate);
     }
 
-    private Tile(final int tileCoord){
-        this.tileCoord = tileCoord;
-    }
 
+    private Tile(int tileCoordinate) {
+        this.tileCoordinate = tileCoordinate;
+    }
+    public abstract Piece getPiece();
     public abstract boolean isTileOccupied();
 
-    public abstract Piece getPiece();
+    public int getTileCoordinate() {
+        return this.tileCoordinate;
+    }
 
-    public static final class EmptyTile extends Tile{
-        EmptyTile(int coord){
-            super(coord);
+
+    public static final class EmptyTile extends Tile {
+
+        private EmptyTile(final int coordinate) {
+            super(coordinate);
         }
 
         @Override
-        public String toString(){
-            return "-";
-        }
-
-        @Override
-        public boolean isTileOccupied(){
+        public boolean isTileOccupied() {
             return false;
         }
 
         @Override
-        public Piece getPiece(){
+        public Piece getPiece() {
             return null;
+        }
+
+        @Override
+        public String toString() {
+            return "-";
         }
     }
 
-    public static final class OccupiedTile extends Tile{
+
+    public static final class OccupiedTile extends Tile {
+
         private final Piece pieceOnTile;
 
-        OccupiedTile(int tileCoord, Piece pieceOnTile){
-            super(tileCoord);
+        private OccupiedTile(final int coordinate, Piece pieceOnTile) {
+            super(coordinate);
             this.pieceOnTile = pieceOnTile;
         }
 
         @Override
-        public String toString(){
-            return getPiece().getPieceAlliance().isBlack() ? getPiece().toString().toLowerCase() : getPiece().toString();
-        }
-
-        @Override
-        public boolean isTileOccupied(){
+        public boolean isTileOccupied() {
             return true;
         }
 
         @Override
-        public Piece getPiece(){
-            return this.pieceOnTile;
+        public Piece getPiece() {
+            return pieceOnTile;
+        }
+
+        @Override
+        public String toString() {
+            return getPiece().getPieceAlliance().isWhite() ? getPiece().toString().toLowerCase() : getPiece().toString();
         }
     }
+
+
 }

@@ -1,4 +1,4 @@
-package gui.pieces;
+package gamesrc.pieces;
 
 import gamesrc.Alliance;
 import gamesrc.board.Board;
@@ -7,21 +7,22 @@ import gamesrc.board.Move;
 import java.util.Collection;
 
 public abstract class Piece {
-    protected final PieceType pieceType;
+
     protected final int piecePosition;
-    protected final Alliance pieceAlliance;
+    protected Alliance pieceAlliance;
     protected final boolean isFirstMove;
+    protected final PieceType pieceType;
     private final int cachedHashCode;
 
-    Piece(final PieceType pieceType ,final int piecePosition, final Alliance pieceAlliance ){
-        this.piecePosition=piecePosition;
-        this.pieceAlliance=pieceAlliance;
+    public Piece(final PieceType pieceType, final int piecePosition, Alliance pieceAlliance, final boolean isFirstMove) {
         this.pieceType = pieceType;
-        this.isFirstMove=false;
+        this.piecePosition = piecePosition;
+        this.pieceAlliance = pieceAlliance;
+        this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
     }
 
-    private int computeHashCode(){
+    private int computeHashCode() {
         int result = pieceType.hashCode();
         result = 31 * result + pieceAlliance.hashCode();
         result = 31 * result + piecePosition;
@@ -30,44 +31,60 @@ public abstract class Piece {
     }
 
     @Override
-    public boolean equals(final Object other){
-        if(this == other) {
+    public boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }
-        if(!(other instanceof Piece otherPiece)){
+        if (!(other instanceof Piece)) {
             return false;
         }
-        return (piecePosition == otherPiece.getPiecePos() &&
-                pieceType == otherPiece.getPieceType() &&
-                pieceAlliance == otherPiece.getPieceAlliance() &&
-                isFirstMove == otherPiece.isFirstMove());
+        final Piece otherPiece = (Piece) other;
+        return piecePosition == otherPiece.getPiecePosition() && pieceType == otherPiece.getPieceType() &&
+                pieceAlliance == otherPiece.getPieceAlliance() && isFirstMove == otherPiece.isFirstMove;
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return this.cachedHashCode;
     }
-    
-    public int getPiecePos(){
+
+    /**
+     * Returns position of a piece.
+     *
+     * @return A piece coordinate.
+     */
+    public int getPiecePosition() {
         return this.piecePosition;
     }
 
-    public Alliance getPieceAlliance(){
+    /**
+     * Returns an alliance of a piece.
+     *
+     * @return An alliance, black or white.
+     */
+    public Alliance getPieceAlliance() {
         return this.pieceAlliance;
     }
 
-    public boolean isFirstMove(){
+    /**
+     * Returns true if a piece hasn't moved yet,
+     * otherwise returns false
+     */
+    public boolean isFirstMove() {
         return this.isFirstMove;
     }
 
-    public abstract Collection<Move> calculateLegalMoves(final Board board);
 
-    public abstract Piece movePiece(Move move);
-
+    /**
+     * Returns a piece type of called object
+     */
     public PieceType getPieceType() {
         return this.pieceType;
     }
 
+    public abstract Piece movePiece(Move move);
+
+    public abstract Collection<Move> calculateLegalMoves(final Board board);
 
     public enum PieceType {
 
@@ -140,17 +157,31 @@ public abstract class Piece {
 
         private String pieceName;
 
-        PieceType(final String pieceName){
+        PieceType(final String pieceName) {
             this.pieceName = pieceName;
-        }
-
-        @Override
-        public String toString(){
-            return this.pieceName;
         }
 
         public abstract boolean isKing();
 
         public abstract boolean isRook();
+
+        @Override
+        public String toString() {
+            return this.pieceName;
+
+        }
+
+
     }
+
+
+
+
+
+
+
+
+
+
 }
+

@@ -1,4 +1,4 @@
-package gui.pieces;
+package gamesrc.pieces;
 
 import com.google.common.collect.ImmutableList;
 
@@ -16,39 +16,62 @@ import static gamesrc.board.Move.*;
 
 public class Bishop extends Piece {
 
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORD = {-9, -7, 7, 9};
+    private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-9, -7, 7, 9};
 
-    public Bishop(Alliance pieceAlliance, int piecePosition) {
-        super(PieceType.BISHOP,piecePosition, pieceAlliance);
+    public Bishop(final Alliance pieceAlliance, int piecePosition) {
+        super(Piece.PieceType.BISHOP, piecePosition, pieceAlliance, true);
+    }
+
+    public Bishop(final Alliance pieceAlliance, int piecePosition, boolean isFirstMove) {
+        super(Piece.PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
     }
 
     @Override
-    public Collection<Move> calculateLegalMoves(Board board) {
+    public String toString() {
+        return Piece.PieceType.BISHOP.toString();
+    }
+
+    @Override
+    public Bishop movePiece(Move move) {
+        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+    }
+
+    /**
+     * Returns a list of legal moves which can be used
+     * to determine which way can a piece move.
+     * Overriden method from super class Piece.
+     *
+     * @param board a board at which the moves should be calculated
+     * @return list of Move class objects
+     */
+    @Override
+    public Collection<Move> calculateLegalMoves(final Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
 
-        for (int candCoordOffset : CANDIDATE_MOVE_VECTOR_COORD) {
-            int candDestCoord = this.piecePosition;
+        for (final int candidateCoordinateOffset : CANDIDATE_MOVE_VECTOR_COORDS) {
 
-            while (BoardUtils.isValidTileCoord(candDestCoord)) {
+            int candidateDestinationCoordinate = this.piecePosition;
 
-                if (isFirstColumnExl(candDestCoord, candCoordOffset) || isEighthColumnExl(candDestCoord, candCoordOffset)) {
+            while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
+
+                if (isFirstColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset) ||
+                        isEighthColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset)) {
                     break;
                 }
+                candidateDestinationCoordinate += candidateCoordinateOffset;
+                if (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
 
-                candDestCoord += candCoordOffset;
-
-                if (BoardUtils.isValidTileCoord(candDestCoord)) {
-                    final Tile candDestTile = board.getTile(candDestCoord);
-
-                    if (!candDestTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMove(board, this, candDestCoord));
+                    final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
+                    if (!candidateDestinationTile.isTileOccupied()) {
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
-                        final Piece pieceAtDest = candDestTile.getPiece();
-                        final Alliance pieceAlliance = pieceAtDest.getPieceAlliance();
+                        final Piece pieceAtDestination = candidateDestinationTile.getPiece();
+                        final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new AttackMove(board, this, candDestCoord, pieceAtDest));
+                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
+                        // if it's occupied, no need to continue validating, break
                         break;
                     }
                 }
@@ -59,21 +82,15 @@ public class Bishop extends Piece {
         return ImmutableList.copyOf(legalMoves);
     }
 
-    @Override
-    public Bishop movePiece(Move move) {
-        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestCoord());
+
+    private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {
+        return (BoardUtils.FIRST_COLUMN[currentPosition] &&
+                ((candidateOffset == -9) || (candidateOffset == 7)));
     }
 
-    @Override
-    public String toString(){
-        return PieceType.BISHOP.toString();
+    private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset) {
+        return BoardUtils.EIGHTH_COLUMN[currentPosition] &&
+                ((candidateOffset == -7) || (candidateOffset == 9));
     }
 
-    private static boolean isFirstColumnExl(final int currentPos, final int candOffset) {
-        return BoardUtils.FIRST_COLUMN[currentPos] && (candOffset == -9 || candOffset == 7);
-    }
-
-    private static boolean isEighthColumnExl(final int currentPos, final int candOffset) {
-        return BoardUtils.EIGHTH_COLUMN[currentPos] && (candOffset == 9 || candOffset == -7);
-    }
 }
