@@ -75,15 +75,6 @@ public class Table {
 
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("Menu");
-        final JMenuItem openPGN = new JMenuItem("Load PGN File");
-        openPGN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Open up pgn file");
-            }
-        });
-        fileMenu.add(openPGN);
-
         final JMenuItem exitMenuItem = new JMenuItem("Exit game");
         exitMenuItem.addActionListener(new ActionListener() {
             @Override
