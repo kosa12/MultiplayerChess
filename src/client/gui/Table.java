@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +25,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static javax.swing.SwingUtilities.*;
+import static javax.swing.SwingUtilities.isLeftMouseButton;
+import static javax.swing.SwingUtilities.isRightMouseButton;
 
 public class Table {
 
@@ -47,6 +49,9 @@ public class Table {
     private static BoardPanel boardPanel;
     private final MoveLog moveLog;
 
+    private final JPanel topPanel;
+    private final JLabel currentPlayerLabel;
+
     public Table() {
         this.gameFrame = new JFrame("chessGame");
         this.gameFrame.setLayout(new BorderLayout());
@@ -64,6 +69,15 @@ public class Table {
         this.gameFrame.add(gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
+
+        this.topPanel = new JPanel(new BorderLayout());
+        this.topPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        this.currentPlayerLabel = new JLabel("Current Player: " + chessBoard.currentPlayer().getAlliance());
+        this.currentPlayerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.topPanel.add(currentPlayerLabel, BorderLayout.CENTER);
+
+        this.gameFrame.add(this.topPanel, BorderLayout.NORTH);
     }
 
     private JMenuBar createTableMenuBar() {
@@ -83,8 +97,6 @@ public class Table {
             }
         });
         fileMenu.add(exitMenuItem);
-
-
         return fileMenu;
 
 
@@ -232,10 +244,14 @@ public class Table {
             assignTileColor();
             assignTilePieceIcon(board);
             highlightLegals(board);
+            updateCurrentPlayerLabel();
             validate();
             repaint();
         }
 
+        private void updateCurrentPlayerLabel() {
+            currentPlayerLabel.setText("Current Player: " + chessBoard.currentPlayer().getAlliance());
+        }
 
 
         private void assignTilePieceIcon(final Board board) {
@@ -345,8 +361,4 @@ public class Table {
         preferenceMenu.add(LegalMoveHighlighter);
         return preferenceMenu;
     }
-
-
-
-
 }
