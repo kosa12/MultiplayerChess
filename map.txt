@@ -1,0 +1,174 @@
+Board : Builder : Builder
+                  build
+                  setEnPassantPawn
+                  setMoveMaker
+                  setMoveTransition
+                  setPiece
+                  boardConfig
+                  enPassantPawn
+                  nextMoveMaker
+                  transitionMove
+
+          Board
+          blackPlayer
+          calculateActivePieces
+          calculateLegalMoves
+          createGameBoard
+          createStandardBoard
+          currentPlayer
+          getAllLegalMoves
+          getBlackPieces
+          getEnPassantPawn
+          getTile
+          getWhitePieces
+          toString
+          whitePlayer
+          blackPieces
+          blackPlayer
+          currentPlayer
+          enPassantPawn
+          gameBoard
+          whitePieces
+          whitePlayer
+
+BoardUtils
+BoardUtils
+getCoordinateAtPosition
+getPositionAtCoordinate
+initColumn
+initializeAlgebraicNotation
+initializePositionToCoordinateMap
+initRow
+isValidTileCoordinate
+ALGEBRAIC_NOTATION
+EIGHTH_COLUMN
+EIGHTH_RANK
+FIFTH_RANK
+FIRST_COLUMN
+FIRST_RANK
+FOURTH_RANK
+GRID_SIZE
+NUM_POINTS
+NUM_TILES
+NUM_TILES_PER_ROW
+POSITION_TO_COORDINATE
+SECOND_COLUMN
+SECOND_RANK
+SEVENTH_COLUMN
+SEVENTH_RANK
+SIXTH_RANK
+THIRD_RANK
+
+Move
+AttackMove
+CastleMove
+KingSideCastleMove
+MajorAttackMove
+MajorMove
+MoveFactory
+NullMove
+PawnAttackMove
+PawnEnPassantAttackMove
+PawnJump
+PawnMove
+PawnPromotion
+QueenSideCastleMove
+Move
+Move
+equals
+execute
+getAttackedPiece
+getBoard
+getCurrentCoordinate
+getDestinationCoordinate
+getMovedPiece
+hashCode
+isAttack
+isCastlingMove
+board
+destinationCoordinate
+isFirstMove
+movedPiece
+NULL_MOVE
+
+Tile
+EmptyTile
+OccupiedTile
+Tile
+createAllPossibleEmptyTiles
+createTile
+getPiece
+getTileCoordinate
+isTileOccupied
+EMPTY_TILES_CACHE
+tileCoordinate
+
+pieces
+Bishop
+King
+Knight
+Pawn
+Piece
+Queen
+Rook
+
+Player
+Player
+calculateAttacksOnTile
+calculateKingCastles
+establishKing
+getActivePieces
+getAlliance
+getLegalMoves
+getOpponent
+getPlayerKing
+hasEscapeMoves
+isCastled
+isInCheck
+isInCheckMate
+isInStaleMate
+isMoveLegal
+makeMove
+board
+isInCheck
+legalMoves
+playerKing
+
+MoveTransition
+MoveTransition
+getMoveStatus
+getTransitionBoard
+move
+moveStatus
+transitionBoard
+
+Alliance
+choosePlayer
+getDirection
+getOppositeDirection
+isBlack
+isPawnPromotionSquare
+isWhite
+BLACK
+WHITE
+
+WhitePlayer
+WhitePlayer
+calculateKingCastles
+getActivePieces
+getAlliance
+getOpponent
+
+
+BlackPlayer
+BlackPlayer
+calculateKingCastles
+getActivePieces
+getAlliance
+getOpponent
+
+MoveStatus
+isDone
+DONE
+ILLEGAL_MOVE
+LEAVES_PLAYER_IN_CHECK

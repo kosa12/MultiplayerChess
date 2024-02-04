@@ -20,6 +20,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,12 +31,13 @@ import java.util.List;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
 
-public class Table {
+public class Table{
 
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(1000, 800);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static final String defaultPieceImagesPath = "src/client/gui/chessPiece/";
+
     private static Board chessBoard;
     private final GameHistoryPanel gameHistoryPanel;
     private final TakenPiecesPanel takenPiecesPanel;
@@ -45,12 +49,16 @@ public class Table {
     private final Color lightTileColor = Color.decode("#ffce9e");
     private final Color darkTileColor = Color.decode("#d18b47");
 
-    private final JFrame gameFrame;
+    public final JFrame gameFrame;
     private static BoardPanel boardPanel;
     private final MoveLog moveLog;
 
     private final JPanel topPanel;
     private final JLabel currentPlayerLabel;
+
+    private ServerSocket listener;
+    private Socket socket;
+    private PrintWriter printWriter;
 
     public Table() {
         this.gameFrame = new JFrame("chessGame");
@@ -68,7 +76,7 @@ public class Table {
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(boardPanel, BorderLayout.CENTER);
-        this.gameFrame.setVisible(true);
+
 
         this.topPanel = new JPanel(new BorderLayout());
         this.topPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -76,8 +84,9 @@ public class Table {
         this.currentPlayerLabel = new JLabel("Current Player: " + chessBoard.currentPlayer().getAlliance());
         this.currentPlayerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.topPanel.add(currentPlayerLabel, BorderLayout.CENTER);
-
         this.gameFrame.add(this.topPanel, BorderLayout.NORTH);
+
+        this.gameFrame.setVisible(true);
     }
 
     private JMenuBar createTableMenuBar() {
@@ -105,6 +114,9 @@ public class Table {
     private boolean getHighlightLegalMoves() {
         return this.highlightLegalMoves;
     }
+
+
+
 
     private class BoardPanel extends JPanel {
         final List<TilePanel> boardTiles;
