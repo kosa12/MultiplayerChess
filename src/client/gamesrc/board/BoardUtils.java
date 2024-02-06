@@ -55,7 +55,7 @@ public class BoardUtils {
     }
 
 
-    public int getCoordinateAtPosition(final String position) {
+    public static int getCoordinateAtPosition(final String position) {
         return POSITION_TO_COORDINATE.get(position);
     }
 

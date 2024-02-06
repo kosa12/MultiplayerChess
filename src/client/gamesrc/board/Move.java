@@ -5,7 +5,9 @@ import client.gamesrc.pieces.Pawn;
 import client.gamesrc.pieces.Piece;
 import client.gamesrc.pieces.Rook;
 
-public abstract class Move {
+import java.io.Serializable;
+
+public abstract class Move implements Serializable {
 
     final Board board;
     final Piece movedPiece;
@@ -88,7 +90,9 @@ public abstract class Move {
         for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
             builder.setPiece(piece);
         }
-        //move the moved piece
+
+        System.out.println("Move: " + this.toString());
+
         builder.setPiece(this.movedPiece.movePiece(this));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
         return builder.build();
@@ -219,6 +223,7 @@ public abstract class Move {
             for(final Piece piece : pawnMovedBoard.currentPlayer().getOpponent().getActivePieces()){
                 builder.setPiece(piece);
             }
+            System.out.println("Move: " + this.toString());
             builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
             builder.setMoveMaker(pawnMovedBoard.currentPlayer().getAlliance());
             return builder.build();
@@ -283,6 +288,7 @@ public abstract class Move {
             builder.setPiece(movedPawn);
             builder.setEnPassantPawn(movedPawn);
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+            System.out.println("Move: " + this.toString());
             return builder.build();
         }
 
@@ -342,6 +348,7 @@ public abstract class Move {
             }
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+            System.out.println("Move: " + this.toString());
             return builder.build();
 
         }
@@ -395,6 +402,7 @@ public abstract class Move {
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setPiece(new Rook(this.castleRook.getPieceAlliance(), this.getCastleRookDestination));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+            System.out.println("Move: " + this.toString());
             return builder.build();
         }
 

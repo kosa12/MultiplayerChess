@@ -20,9 +20,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +30,7 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 
 public class Table{
 
-    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(1000, 800);
+    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 500);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static final String defaultPieceImagesPath = "src/client/gui/chessPiece/";
@@ -55,10 +52,6 @@ public class Table{
 
     private final JPanel topPanel;
     private final JLabel currentPlayerLabel;
-
-    private ServerSocket listener;
-    private Socket socket;
-    private PrintWriter printWriter;
 
     public Table() {
         this.gameFrame = new JFrame("chessGame");
@@ -118,6 +111,14 @@ public class Table{
 
 
 
+
+
+
+
+
+
+
+
     private class BoardPanel extends JPanel {
         final List<TilePanel> boardTiles;
 
@@ -153,6 +154,13 @@ public class Table{
 
         public List<Move> getMoves(){
             return this.moves;
+        }
+
+        public Move returnCurrentMove(){
+            if(this.moves.isEmpty()){
+                return null;
+            }
+            return this.moves.getLast();
         }
 
         public void addMoves(final Move move){

@@ -11,8 +11,6 @@ public abstract class Tile {
     private static final Map<Integer, EmptyTile> EMPTY_TILES_CACHE = createAllPossibleEmptyTiles();
 
 
-    /* Creates a map of all possible empty tiles (EMPTY_TILES_CACHE) upfront, so when we need one we don't have to
-    create it again, we'll just take it out of this map.*/
     private static Map<Integer, EmptyTile> createAllPossibleEmptyTiles() {
 
         final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
