@@ -82,6 +82,7 @@ public class Table{
         this.gameFrame.setVisible(true);
     }
 
+
     private JMenuBar createTableMenuBar() {
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
@@ -109,13 +110,18 @@ public class Table{
     }
 
 
+    public void requestMove(Move move) {
+        System.out.println("Received Move: " + move.toString());
 
+        MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
+        if (transition.getMoveStatus().isDone()) {
+            chessBoard = transition.getTransitionBoard();
+        }
+    }
 
-
-
-
-
-
+    public void repaintFrame(){
+        this.gameFrame.repaint();
+    }
 
 
 

@@ -1,55 +1,54 @@
 package server;
 
+import client.gamesrc.board.Board;
+import client.gui.Table;
+
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.InetAddress;
+import java.net.Socket;
 
-public class Server extends NetworkEntity {
+public class Client extends NetworkEntity {
 
-    private ServerSocket server;
+    private String hostName;
 
-    private final int listenPort;
+    private int serverPort;
 
-    public Server(final int listen_port) {
-        super("SERVER");
-        listenPort = listen_port;
+    public Client(final String host, final int port) {
+        super("CLIENT");
+        hostName = host;
+        serverPort = port;
     }
 
     public void run() {
-
         try {
-            server = new ServerSocket(listenPort, 1);
-            //chatPanel.writeToDisplay("Listening on port " + listenPort);
-            try {
-                waitForConnection();
-                getStreams();
-                processIncomingData();
-            }
-            catch (IOException ioe) {
-                ioe.printStackTrace();
-            } finally {
-                closeConnection();
-            }
-        } catch (IOException e) {
-            //    JOptionPane.showMessageDialog(gameFrame, "Network Error: " + e, "Notification",
-            //            JOptionPane.ERROR_MESSAGE);
+            connectToServer();
+            getStreams();
+            processIncomingData();
         }
-
-    }
-
-    private void waitForConnection() throws IOException {
-        connectionHandle = server.accept();
-        //connectionEstablished = true;
-        //chatPanel.writeToDisplay("Connection received from:"
-        //        + connectionHandle.getInetAddress().getHostName());
-    }
-
-    public void closeConnection() {
-        super.closeConnection();
-        try {
-            server.close();
-        } catch (IOException e) {
-            //    chatPanel.writeToDisplay(getName()
-            //            + "failed to disconnect from the network");
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        } finally {
+            closeConnection();
         }
     }
+
+    private void connectToServer() {
+        try {
+            connectionHandle = new Socket(InetAddress.getByName(hostName),
+                    serverPort);
+            //connectionEstablished = true;
+            System.out.println("Successfully connected to " + connectionHandle.getInetAddress().getHostName());
+        } catch (IOException e) {
+            System.out.println("Failed to connect to: " + hostName);
+        }
+    }
+
+    public static void main(String[] args) {
+        Board board = Board.createStandardBoard();
+        Table table = new Table();
+        Client client = new Client("localhost", 5000);
+        client.start();
+
+    }
+
 }
