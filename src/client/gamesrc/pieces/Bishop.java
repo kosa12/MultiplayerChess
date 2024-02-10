@@ -35,14 +35,6 @@ public class Bishop extends Piece {
         return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
     }
 
-    /**
-     * Returns a list of legal moves which can be used
-     * to determine which way can a piece move.
-     * Overriden method from super class Piece.
-     *
-     * @param board a board at which the moves should be calculated
-     * @return list of Move class objects
-     */
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
 

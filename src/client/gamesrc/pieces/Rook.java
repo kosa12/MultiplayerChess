@@ -14,14 +14,7 @@ import java.util.List;
 public class Rook extends Piece {
 
     private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-8, -1, 1, 8};
-
-    /**
-     * A piece constructor, creates a piece belonging
-     * to a certain alliance from parameters.
-     *
-     * @param piecePosition coordinate at which it shall be put.
-     * @param pieceAlliance an alliance to which the piece will belong - black or white.
-     */
+    
     public Rook(Alliance pieceAlliance, int piecePosition) {
         super(PieceType.ROOK, piecePosition, pieceAlliance, true);
     }

@@ -15,13 +15,6 @@ public class Queen extends Piece {
 
     private final static int[] CANDIDATE_MOVE_VECTOR_COORDS = {-9, -8, -7, -1, 1, 7, 8, 9};
 
-    /**
-     * A piece constructor, creates a piece belonging
-     * to a certain alliance from parameters.
-     *
-     * @param piecePosition coordinate at which it shall be put.
-     * @param pieceAlliance an alliance to which the piece will belong - black or white.
-     */
     public Queen(Alliance pieceAlliance, int piecePosition) {
         super(PieceType.QUEEN, piecePosition,pieceAlliance, true);
     }

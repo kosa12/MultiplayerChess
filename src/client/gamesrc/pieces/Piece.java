@@ -35,10 +35,9 @@ public abstract class Piece {
         if (this == other) {
             return true;
         }
-        if (!(other instanceof Piece)) {
+        if (!(other instanceof Piece otherPiece)) {
             return false;
         }
-        final Piece otherPiece = (Piece) other;
         return piecePosition == otherPiece.getPiecePosition() && pieceType == otherPiece.getPieceType() &&
                 pieceAlliance == otherPiece.getPieceAlliance() && isFirstMove == otherPiece.isFirstMove;
     }
@@ -137,8 +136,8 @@ public abstract class Piece {
             }
         };
 
-        private String pieceName;
-        private int pieceValue;
+        private final String pieceName;
+        private final int pieceValue;
 
         PieceType(final String pieceName, final int pieceValue) {
             this.pieceName = pieceName;
