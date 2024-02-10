@@ -194,6 +194,9 @@ public class Table implements ActionListener {
                             int sourceCoord = tile.getTileCoordinate();
 
                             Move move = Move.MoveFactory.createMove(chessBoard, sourceCoord, destCoord);
+                            if(!move.toString().equals(moveStr)){
+                                continue;
+                            }
                             MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                             if (transition.getMoveStatus().isDone()) {
                                 chessBoard = transition.getTransitionBoard();
