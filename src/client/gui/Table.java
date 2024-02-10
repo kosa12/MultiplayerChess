@@ -1,6 +1,7 @@
 package client.gui;
 
 
+import client.gamesrc.Alliance;
 import client.gamesrc.board.Board;
 import client.gamesrc.board.BoardUtils;
 import client.gamesrc.board.Move;
@@ -20,15 +21,17 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
+import java.util.*;
+import java.util.concurrent.Executors;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
 
-public class Table{
+public class Table implements ActionListener {
 
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 500);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
@@ -52,6 +55,15 @@ public class Table{
 
     private final JPanel topPanel;
     private final JLabel currentPlayerLabel;
+    private JButton serverBtn;
+    private JButton clientBtn;
+
+    private ServerSocket listener;
+    private Socket socket;
+    private PrintWriter printWriter;
+
+    private String SOCKET_SERVER_ADDR = "localhost";
+    private int PORT = 50000;
 
     public Table() {
         this.gameFrame = new JFrame("chessGame");
@@ -61,7 +73,7 @@ public class Table{
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
-        chessBoard = Board.createStandardBoard();
+        chessBoard = Board.createStandardBoard(Alliance.WHITE);
         this.gameHistoryPanel = new GameHistoryPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.moveLog = new MoveLog();
@@ -78,6 +90,17 @@ public class Table{
         this.currentPlayerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.topPanel.add(currentPlayerLabel, BorderLayout.CENTER);
         this.gameFrame.add(this.topPanel, BorderLayout.NORTH);
+
+        var buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        serverBtn = new JButton("Server");
+        buttonsPanel.add(serverBtn);
+        serverBtn.addActionListener(this);
+
+        clientBtn = new JButton("Client");
+        buttonsPanel.add(clientBtn);
+        clientBtn.addActionListener(this);
+
+        this.gameFrame.add(buttonsPanel, BorderLayout.PAGE_END);
 
         this.gameFrame.setVisible(true);
     }
@@ -105,24 +128,103 @@ public class Table{
 
     }
 
-    private boolean getHighlightLegalMoves() {
-        return this.highlightLegalMoves;
-    }
+    private void runSocketClient() {
+        try {
+            socket = new Socket(SOCKET_SERVER_ADDR, PORT);
+            System.out.println("client connected to port " + PORT);
+            var scanner = new Scanner(socket.getInputStream());
+            printWriter = new PrintWriter(socket.getOutputStream(), true);
 
-
-    public void requestMove(Move move) {
-        System.out.println("Received Move: " + move.toString());
-
-        MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
-        if (transition.getMoveStatus().isDone()) {
-            chessBoard = transition.getTransitionBoard();
+            Executors.newFixedThreadPool(1).execute(new Runnable() {
+                @Override
+                public void run() {
+                    receiveMove(scanner);
+                }
+            });
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 
-    public void repaintFrame(){
-        this.gameFrame.repaint();
+    private void runSocketServer() {
+        Executors.newFixedThreadPool(1).execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    listener = new ServerSocket(PORT);
+                    System.out.println("server is listening on port " + PORT);
+                    socket = listener.accept();
+                    System.out.println("connected from " + socket.getInetAddress());
+                    printWriter = new PrintWriter(socket.getOutputStream(), true);
+                    var scanner = new Scanner(socket.getInputStream());
+                    receiveMove(scanner);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
+    private void receiveMove(Scanner scanner) {
+        while (scanner.hasNextLine()) {
+            var moveStr = scanner.nextLine();
+            System.out.println("chess move received: " + moveStr);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    String[] moveParts = moveStr.split(": ");
+
+                    String destinationSquare = moveParts[moveParts.length - 1].trim(); // Extract destination square
+                    if (destinationSquare.length() >= 2) {
+                        // Extract only the last two characters
+                        destinationSquare = destinationSquare.substring(destinationSquare.length() - 2);
+                    } else {
+                        System.out.println("Invalid destination square: " + destinationSquare);
+                        return; // Exit if destination square is too short
+                    }
+
+                    int destCoord = BoardUtils.getCoordinateAtPosition(destinationSquare);
+
+                    for (final Tile tile : chessBoard.getAllTiles()) {
+                        if (tile.isTileOccupied() &&
+                                tile.getPiece().getPieceAlliance() == chessBoard.currentPlayer().getAlliance() &&
+                                tile.getPiece().calculateLegalMoves(chessBoard).stream()
+                                        .anyMatch(move -> move.getDestinationCoordinate() == destCoord)) {
+                            int sourceCoord = tile.getTileCoordinate();
+
+                            Move move = Move.MoveFactory.createMove(chessBoard, sourceCoord, destCoord);
+                            MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
+                            if (transition.getMoveStatus().isDone()) {
+                                chessBoard = transition.getTransitionBoard();
+                                moveLog.addMoves(move);
+                            }
+                            boardPanel.drawBoard(chessBoard);
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == serverBtn) {
+            serverBtn.setEnabled(false);
+            clientBtn.setEnabled(false);
+            this.gameFrame.setTitle("Chess Server");
+            runSocketServer();
+            JOptionPane.showMessageDialog(this.gameFrame, "listening on port " + PORT);
+        } else if (e.getSource() == clientBtn) {
+            serverBtn.setEnabled(false);
+            clientBtn.setEnabled(false);
+            this.gameFrame.setTitle("Chess Client");
+            runSocketClient();
+            JOptionPane.showMessageDialog(this.gameFrame, "connected to port " + PORT);
+        }
+    }
 
 
     private class BoardPanel extends JPanel {
@@ -152,40 +254,41 @@ public class Table{
 
     }
 
-    public static class MoveLog{
+    public static class MoveLog {
         private final List<Move> moves;
-        MoveLog(){
+
+        MoveLog() {
             this.moves = new ArrayList<>();
         }
 
-        public List<Move> getMoves(){
+        public List<Move> getMoves() {
             return this.moves;
         }
 
-        public Move returnCurrentMove(){
-            if(this.moves.isEmpty()){
+        public Move returnCurrentMove() {
+            if (this.moves.isEmpty()) {
                 return null;
             }
             return this.moves.getLast();
         }
 
-        public void addMoves(final Move move){
+        public void addMoves(final Move move) {
             this.moves.add(move);
         }
 
-        public int size(){
+        public int size() {
             return this.moves.size();
         }
 
-        public void clear(){
+        public void clear() {
             this.moves.clear();
         }
 
-        public Move removeMove(int index){
+        public Move removeMove(int index) {
             return this.moves.remove(index);
         }
 
-        public boolean removeMove(final Move move){
+        public boolean removeMove(final Move move) {
             return this.moves.remove(move);
         }
     }
@@ -202,11 +305,10 @@ public class Table{
             assignTilePieceIcon(chessBoard);
 
             addMouseListener(new MouseListener() {
+
                 @Override
                 public void mouseClicked(final MouseEvent e) {
-
                     if (isRightMouseButton(e)) {
-
                         sourceTile = null;
                         destinationTile = null;
                         humanMovedPiece = null;
@@ -224,19 +326,20 @@ public class Table{
                             if (transition.getMoveStatus().isDone()) {
                                 chessBoard = transition.getTransitionBoard();
                                 moveLog.addMoves(move);
+
+                                // Send the move to the server
+                                String moveString = move.toString(); // Convert the move to a string
+                                printWriter.println(moveString); // Send the move string to the server
+
+                                // Update the board and GUI
+                                boardPanel.drawBoard(chessBoard);
+                                gameHistoryPanel.redo(chessBoard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                             }
                             sourceTile = null;
                             destinationTile = null;
                             humanMovedPiece = null;
                         }
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                gameHistoryPanel.redo(chessBoard, moveLog);
-                                takenPiecesPanel.redo(moveLog);
-                                boardPanel.drawBoard(chessBoard);
-                            }
-                        });
                     }
                 }
 
@@ -262,7 +365,6 @@ public class Table{
             });
 
 
-
             validate();
         }
 
@@ -285,7 +387,7 @@ public class Table{
             if (board.getTile(this.tileId).isTileOccupied()) {
                 try {
                     final BufferedImage image =
-                            ImageIO.read(new File(defaultPieceImagesPath + board.getTile(this.tileId).getPiece().getPieceAlliance().toString().substring(0,1) + board.getTile(this.tileId).getPiece().toString() + ".png"));
+                            ImageIO.read(new File(defaultPieceImagesPath + board.getTile(this.tileId).getPiece().getPieceAlliance().toString().substring(0, 1) + board.getTile(this.tileId).getPiece().toString() + ".png"));
                     add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -314,8 +416,7 @@ public class Table{
                     if (move.getDestinationCoordinate() == this.tileId) {
                         try {
                             add(new JLabel(new ImageIcon(ImageIO.read(new File("src/client/gui/green_dot.png")))));
-                        }
-                        catch (final IOException e) {
+                        } catch (final IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -324,7 +425,7 @@ public class Table{
         }
 
         private Collection<Move> pieceLegalMoves(final Board board) {
-            if(humanMovedPiece != null && humanMovedPiece.getPieceAlliance()== board.currentPlayer().getAlliance()) {
+            if (humanMovedPiece != null && humanMovedPiece.getPieceAlliance() == board.currentPlayer().getAlliance()) {
                 return humanMovedPiece.calculateLegalMoves(board);
             }
             return Collections.emptyList();
@@ -356,11 +457,12 @@ public class Table{
         };
 
         abstract List<TilePanel> traverse(final List<TilePanel> boardTiles);
+
         abstract BoardDirection opposite();
 
     }
 
-    private JMenu preferenceMenu(){
+    private JMenu preferenceMenu() {
         final JMenu preferenceMenu = new JMenu("Preferences");
         final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
         flipBoardMenuItem.addActionListener(new ActionListener() {

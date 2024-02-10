@@ -116,7 +116,7 @@ public class Board {
      *
      * @return A ready board.
      */
-    public static Board createStandardBoard() {
+    public static Board createStandardBoard(Alliance white) {
         final Builder builder = new Builder();
         // Black Layout
         builder.setPiece(new Rook(Alliance.BLACK, 0));
@@ -160,6 +160,10 @@ public class Board {
 
     public Iterable<Move> getAllLegalMoves() {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
+    }
+
+    public List<Tile> getAllTiles() {
+        return gameBoard;
     }
 
 

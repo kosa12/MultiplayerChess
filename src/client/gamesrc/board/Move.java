@@ -513,7 +513,6 @@ public abstract class Move implements Serializable {
             return NULL_MOVE;
         }
 
-
     }
 
 
