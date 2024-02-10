@@ -19,6 +19,7 @@
 - All chessmoves are implemented and functional (castling, promotion, en Passat etc..)
 - Option to highlight the possible legal moves to the chosen piece.
 - Game history logging in Algebraic notation.
+- Server - Client feature where you can play on the same network with another player
   
 ## Getting Started
 
