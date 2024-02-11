@@ -110,12 +110,6 @@ public abstract class Player {
     }
 
 
-    /**
-     * Attempts to make a new move, has three outcomes, an
-     * illegal move which is not possible or a move which leaves
-     * player in check and is also not possible or a normal move with
-     * a done status.
-     */
     public MoveTransition makeMove(final Move move) {
         if (!isMoveLegal(move)) {
             return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);

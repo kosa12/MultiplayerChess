@@ -224,6 +224,8 @@ public abstract class Move implements Serializable {
                 builder.setPiece(piece);
             }
             System.out.println("Move: " + this.toString());
+
+
             builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
             builder.setMoveMaker(pawnMovedBoard.currentPlayer().getAlliance());
             return builder.build();
@@ -241,6 +243,7 @@ public abstract class Move implements Serializable {
 
         @Override
         public String toString(){
+
             return BoardUtils.getPositionAtCoordinate(this.movedPiece.getPiecePosition()) + "Q";
         }
 
